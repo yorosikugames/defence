@@ -78,8 +78,8 @@ namespace defense
                 if (curPos.X == dest.X && curPos.Y == dest.Y)
                 {
                     nextDestIdx++;
+                    nextDestIdx %= DestList.Count;
                 }
-
                 curPos = getNextPos(curPos, DestList[nextDestIdx]);
             }
         }
@@ -89,7 +89,7 @@ namespace defense
             MySolver<MyPoint, Object> aStar = new MySolver<MyPoint, Object>(grid);
             IEnumerable<MyPoint> path = aStar.Search(new Point(curPos.X, curPos.Y), new Point(point.X, point.Y), null);
 
-            return (path.Count() > 3 ? path.ElementAt(2) : path.ElementAt(1));
+            return (path.Count() >= 3 ? path.ElementAt(2) : (path.Count() == 2 ? path.ElementAt(1) : path.FirstOrDefault()));
         }
     }
 }
