@@ -12,7 +12,7 @@ namespace defense
 {
     public partial class Defense : Form
     {
-        private Enemy enemy = new Enemy();
+        private Map map = new Map();
 
         public Defense()
         {
@@ -21,18 +21,37 @@ namespace defense
 
         private void Defense_Load(object sender, EventArgs e)
         {
-
         }
 
         private void ticker_Tick(object sender, EventArgs e)
         {
-            Graphics g = label1.CreateGraphics();
-            using (BufferedGraphics graphic = BufferedGraphicsManager.Current.Allocate(g, label1.ClientRectangle))
+            map.tick();
+            mapLabel.Refresh();
+        }
+
+        private void mapLabel_Click(object sender, EventArgs e)
+        {
+            var mouseEventArgs = e as MouseEventArgs;
+            if (mouseEventArgs == null) return;
+
+            var mapElem = map.getElemAt(mouseEventArgs.X, mouseEventArgs.Y);
+            if (mapElem == null)
+            {
+                Block block = new Block(mouseEventArgs.X, mouseEventArgs.Y);
+                map.setElem(block);
+            }
+        }
+
+        private void mapLabel_Paint(object sender, PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            using (BufferedGraphics graphic = BufferedGraphicsManager.Current.Allocate(g, mapLabel.ClientRectangle))
             {
                 Bitmap bgImg = new Bitmap(@"Resources\map.png");
                 graphic.Graphics.DrawImage(bgImg, 0, 0, 450, 450);
 
-                enemy.tick(graphic.Graphics);
+                //enemy.tick(graphic.Graphics);
+                map.render(graphic.Graphics);
 
                 //bufferedgraphic.Graphics.Clear(Color.Silver);
                 //bufferedgraphic.Graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
@@ -45,7 +64,11 @@ namespace defense
 
                 graphic.Render(g);
             }
+        }
 
+        private void addEnemy_Click(object sender, EventArgs e)
+        {
+            map.registerEnemy(new Enemy(map));
         }
     }
 }

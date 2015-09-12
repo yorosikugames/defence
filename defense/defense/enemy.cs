@@ -7,42 +7,15 @@ using System.Threading.Tasks;
 
 namespace defense
 {
-    public class MyPoint : SettlersEngine.IPathNode<Object>
-    {
-        public Int32 X { get; set; }
-        public Int32 Y { get; set; }
-        public Boolean IsWall { get; set; }
-
-        public bool IsWalkable(Object unused)
-        {
-            return !IsWall;
-        }
-    }
-
-    public class MySolver<TPathNode, TUserContext> : SettlersEngine.SpatialAStar<TPathNode, TUserContext> where TPathNode : SettlersEngine.IPathNode<TUserContext>
-    {
-        protected override Double Heuristic(PathNode inStart, PathNode inEnd)
-        {
-            return Math.Abs(inStart.X - inEnd.X) + Math.Abs(inStart.Y - inEnd.Y);
-        }
-
-        protected override Double NeighborDistance(PathNode inStart, PathNode inEnd)
-        {
-            return Heuristic(inStart, inEnd);
-        }
-
-        public MySolver(TPathNode[,] inGrid)
-            : base(inGrid)
-        {
-        }
-    }
 
     public class Enemy
     {
         public MyPoint curPos = new MyPoint { X = 50, Y = 50 };
         public double health = 100;
+        public Map Map { get; private set; }
 
-        private static MyPoint[,] grid = new MyPoint[450, 450];
+        private MyPoint[] PathList = null;
+        private int curPathIdx = 0;
 
         private int nextDestIdx = 0;
         private static List<MyPoint> DestList = new List<MyPoint> {
@@ -58,38 +31,52 @@ namespace defense
             new MyPoint {X = 400, Y = 400 },
         };
 
-        public Enemy()
+        public Enemy(Map map)
         {
-            for (int x = 0; x < 450; x++)
-                for (int y = 0; y < 450; y++)
-                    grid[x, y] = new MyPoint { X = x, Y = y, IsWall = false };
+            Map = map;
         }
 
         private Pen pen = new Pen(Color.Red);
 
-        public void tick(Graphics g)
+        public void tick()
+        {
+            // goto next pos
+            MyPoint dest = DestList[nextDestIdx];
+            if (PathList != null && curPathIdx + 1 >= PathList.Length)
+            {
+                nextDestIdx++;
+                nextDestIdx %= DestList.Count;
+                PathList = null;
+            }
+            curPos = getNextPos(curPos, DestList[nextDestIdx]);
+        }
+
+        public void render(Graphics g)
         {
             g.DrawEllipse(pen, curPos.X - 10, curPos.Y - 10, 20, 20);
-
-            // goto next pos
-            if (nextDestIdx < DestList.Count)
-            {
-                MyPoint dest = DestList[nextDestIdx];
-                if (curPos.X == dest.X && curPos.Y == dest.Y)
-                {
-                    nextDestIdx++;
-                    nextDestIdx %= DestList.Count;
-                }
-                curPos = getNextPos(curPos, DestList[nextDestIdx]);
-            }
         }
 
         private MyPoint getNextPos(MyPoint curPos, MyPoint point)
         {
-            MySolver<MyPoint, Object> aStar = new MySolver<MyPoint, Object>(grid);
-            IEnumerable<MyPoint> path = aStar.Search(new Point(curPos.X, curPos.Y), new Point(point.X, point.Y), null);
+            if (PathList == null)
+            {
+                PathList = Map.getNextPosList(curPos, point, true).ToArray();
+                curPathIdx = 0;
+            }
+            else
+            {
+                IEnumerable<MyPoint> pathList = Map.getNextPosList(curPos, point, false);
+                if (pathList != null)
+                {
+                    PathList = pathList.ToArray();
+                    curPathIdx = 0;
+                }
+            }
 
-            return (path.Count() >= 3 ? path.ElementAt(2) : (path.Count() == 2 ? path.ElementAt(1) : path.FirstOrDefault()));
+            MyPoint nextPos = PathList[curPathIdx];
+            curPathIdx++;
+
+            return nextPos;
         }
     }
 }
