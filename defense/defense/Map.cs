@@ -45,6 +45,7 @@ namespace defense
         private List<Block> BlockList = new List<Block>();
         MySolver<MyPoint, Object> aStar = null;
         public Boolean InvalidatePath = false;
+        private Block ActivatedBlock;
 
         public Map()
         {
@@ -64,10 +65,12 @@ namespace defense
 
         public Block getElemAt(int x, int y)
         {
-            if (!(0 <= x && x < 450)) return null;
-            if (!(0 <= y && y < 450)) return null;
+            if (!(0 <= x && x < 450)) ActivatedBlock = null;
+            if (!(0 <= y && y < 450)) ActivatedBlock = null;
 
-            return grid[x, y].LinkedBlock;
+            ActivatedBlock = grid[x, y].LinkedBlock;
+
+            return ActivatedBlock;
         }
 
         public void setElem(Block block)
@@ -119,7 +122,7 @@ namespace defense
 
             foreach (var b in BlockList)
             {
-                b.render(g);
+                b.render(g, b == ActivatedBlock);
             }
         }
 

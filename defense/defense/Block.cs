@@ -21,14 +21,18 @@ namespace defense
         }
 
         private Pen pen = new Pen(Color.Black);
+        private Pen activePen = new Pen(Color.Aqua);
 
         public void tick()
         {
         }
 
-        public void render(Graphics g)
+        public void render(Graphics g, bool activated)
         {
-            g.DrawRectangle(pen, x - size, y - size, 2 * size + 1, 2 * size + 1);
+            if (activated)
+                g.DrawRectangle(activePen, x - size, y - size, 2 * size + 1, 2 * size + 1);
+            else
+                g.DrawRectangle(pen, x - size, y - size, 2 * size + 1, 2 * size + 1);
         }
     }
 }
