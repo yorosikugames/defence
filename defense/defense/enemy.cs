@@ -53,7 +53,8 @@ namespace defense
 
         public void render(Graphics g)
         {
-            g.DrawEllipse(pen, curPos.X - 10, curPos.Y - 10, 20, 20);
+            g.FillEllipse(Brushes.IndianRed, curPos.X - 5, curPos.Y - 5, 10, 10);
+            g.DrawEllipse(pen, curPos.X - 5, curPos.Y - 5, 10, 10);
         }
 
         private MyPoint getNextPos(MyPoint curPos, MyPoint point)

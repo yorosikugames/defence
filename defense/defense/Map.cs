@@ -46,6 +46,8 @@ namespace defense
         MySolver<MyPoint, Object> aStar = null;
         public Boolean InvalidatePath = false;
         private Block ActivatedBlock;
+        private BlockType curBlockType = BlockType.NONE;
+        private Random blockRandom = new Random(DateTime.Now.Millisecond);
 
         public Map()
         {
@@ -63,13 +65,39 @@ namespace defense
             return null;
         }
 
+        public BlockType genBlockType()
+        {
+            if (blockRandom.Next(10) < 8)
+                return BlockType.NONE;
+
+            if (curBlockType == BlockType.NONE)
+            {
+                curBlockType = BlockType.FIRE;
+            }
+            else if (curBlockType == BlockType.FIRE)
+            {
+                curBlockType = BlockType.WATER;
+            }
+            else if (curBlockType == BlockType.WATER)
+            {
+                curBlockType = BlockType.ELECTRONIC;
+            }
+            else if (curBlockType == BlockType.ELECTRONIC)
+            {
+                curBlockType = BlockType.NONE;
+            }
+
+            return curBlockType;
+        }
+
         public Block getElemAt(int x, int y)
         {
-            if (!(0 <= x && x < 450)) ActivatedBlock = null;
-            if (!(0 <= y && y < 450)) ActivatedBlock = null;
-
+            if ((!(0 <= x && x < 450)) || (!(0 <= y && y < 450)))
+            {
+                ActivatedBlock = null;
+                return ActivatedBlock;
+            }
             ActivatedBlock = grid[x, y].LinkedBlock;
-
             return ActivatedBlock;
         }
 
@@ -77,14 +105,15 @@ namespace defense
         {
             BlockList.Add(block);
 
-            for (int x = block.x - block.size; x <= block.x + block.size; x++)
+            for (int x = block.x; x <= block.x + block.size; x++)
             {
-                for (int y = block.y - block.size; y <= block.y + block.size; y++)
+                for (int y = block.y; y <= block.y + block.size; y++)
                 {
                     if (!(0 <= x && x < 450)) continue;
                     if (!(0 <= y && y < 450)) continue;
 
-                    grid[x, y].LinkedBlock = block;
+                    if (!((x == block.x + block.size) || (y == block.y + block.size)))
+                        grid[x, y].LinkedBlock = block;
                     grid[x, y].IsWall = true;
                 }
             }
@@ -122,7 +151,8 @@ namespace defense
 
             foreach (var b in BlockList)
             {
-                b.render(g, b == ActivatedBlock);
+                //b.render(g, b == ActivatedBlock);
+                b.render(g, false);
             }
         }
 

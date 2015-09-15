@@ -34,10 +34,11 @@ namespace defense
             var mouseEventArgs = e as MouseEventArgs;
             if (mouseEventArgs == null) return;
 
-            var mapElem = map.getElemAt(mouseEventArgs.X, mouseEventArgs.Y);
+            var mousePos = new Point(mouseEventArgs.X - (mouseEventArgs.X % 10), mouseEventArgs.Y - (mouseEventArgs.Y % 10));
+            var mapElem = map.getElemAt(mousePos.X, mousePos.Y);
             if (mapElem == null)
             {
-                Block block = new Block(mouseEventArgs.X, mouseEventArgs.Y);
+                Block block = new Block(mousePos.X, mousePos.Y, map.genBlockType());
                 map.setElem(block);
             }
         }
@@ -61,6 +62,12 @@ namespace defense
                 //Pen p = new Pen(Color.FromArgb(111, 91, 160), 3);
                 //bufferedgraphic.Graphics.DrawLine(p, 0, 0, 100, 100);
                 //p.Dispose();
+
+                var mousePos = mapLabel.PointToClient(Cursor.Position);
+                mousePos = new Point(mousePos.X - mousePos.X % 10, mousePos.Y - mousePos.Y % 10);
+                var elem = map.getElemAt(mousePos.X, mousePos.Y);
+                if (elem == null)
+                    graphic.Graphics.DrawRectangle(Pens.LightSlateGray, mousePos.X, mousePos.Y, 10, 10);
 
                 graphic.Render(g);
             }
