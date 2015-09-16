@@ -128,10 +128,43 @@ namespace defense
 
         public void tick()
         {
+            var enemyRemovalList = new List<Enemy>();
             foreach (var e in EnemyList)
             {
                 e.tick();
+
+                var checkedBlockSet = new HashSet<Block>();
+                foreach (var x in Enumerable.Range(e.curPos.X - 3, 7))
+                {
+                    foreach (var y in Enumerable.Range(e.curPos.Y - 3, 7))
+                    {
+                        var block = getElemAt(x, y);
+                        if (block == null) continue;
+                        if (block.type == BlockType.NONE) continue;
+                        if (checkedBlockSet.Contains(block)) continue;
+                        checkedBlockSet.Add(block);
+
+                        switch (block.type)
+                        {
+                            case BlockType.FIRE:
+                                e.health--;
+                                break;
+                            case BlockType.WATER:
+                                e.health--;
+                                break;
+                            case BlockType.ELECTRONIC:
+                                e.health--;
+                                break;
+
+                        }
+                    }
+                }
+
+                if (!e.isAlive()) enemyRemovalList.Add(e);
             }
+
+            foreach (var e in enemyRemovalList)
+                EnemyList.Remove(e);
 
             foreach (var b in BlockList)
             {

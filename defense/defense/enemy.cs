@@ -11,7 +11,8 @@ namespace defense
     public class Enemy
     {
         public MyPoint curPos = new MyPoint { X = 50, Y = 50 };
-        public double health = 100;
+        public double health = 200;
+        public double maxHealth = 200;
         public Map Map { get; private set; }
 
         private MyPoint[] PathList = null;
@@ -36,8 +37,6 @@ namespace defense
             Map = map;
         }
 
-        private Pen pen = new Pen(Color.Red);
-
         public void tick()
         {
             // goto next pos
@@ -54,7 +53,29 @@ namespace defense
         public void render(Graphics g)
         {
             g.FillEllipse(Brushes.IndianRed, curPos.X - 5, curPos.Y - 5, 10, 10);
-            g.DrawEllipse(pen, curPos.X - 5, curPos.Y - 5, 10, 10);
+            g.DrawEllipse(Pens.Red, curPos.X - 5, curPos.Y - 5, 10, 10);
+
+            int healthRatio = (int)(health * 10 / maxHealth);
+            if (healthRatio >= 7)
+            {
+                g.FillRectangle(Brushes.LightGreen, curPos.X - 5, curPos.Y - 12, healthRatio, 3);
+                g.DrawRectangle(Pens.Green, curPos.X - 5, curPos.Y - 12, 10, 3);
+            }
+            else if (healthRatio >= 3)
+            {
+                g.FillRectangle(Brushes.LightYellow, curPos.X - 5, curPos.Y - 12, healthRatio, 3);
+                g.DrawRectangle(Pens.Yellow, curPos.X - 5, curPos.Y - 12, 10, 3);
+            }
+            else
+            {
+                g.FillRectangle(Brushes.PaleVioletRed, curPos.X - 5, curPos.Y - 12, healthRatio, 3);
+                g.DrawRectangle(Pens.Red, curPos.X - 5, curPos.Y - 12, 10, 3);
+            }
+        }
+
+        public bool isAlive()
+        {
+            return health > 0;
         }
 
         private MyPoint getNextPos(MyPoint curPos, MyPoint point)
