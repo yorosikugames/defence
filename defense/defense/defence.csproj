@@ -7,8 +7,8 @@
     <ProjectGuid>{73867456-D678-4974-ACCE-BC4F5BEB7476}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>defense</RootNamespace>
-    <AssemblyName>defense</AssemblyName>
+    <RootNamespace>defence</RootNamespace>
+    <AssemblyName>defence</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -47,11 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Block.cs" />
-    <Compile Include="Defense.cs">
+    <Compile Include="Defence.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Defense.Designer.cs">
-      <DependentUpon>Defense.cs</DependentUpon>
+    <Compile Include="Defence.Designer.cs">
+      <DependentUpon>Defence.cs</DependentUpon>
     </Compile>
     <Compile Include="Enemy.cs" />
     <Compile Include="Map.cs" />
@@ -59,8 +59,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpatialAStar.cs" />
-    <EmbeddedResource Include="Defense.resx">
-      <DependentUpon>Defense.cs</DependentUpon>
+    <EmbeddedResource Include="Defence.resx">
+      <DependentUpon>Defence.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
