@@ -33,6 +33,10 @@
             this.menuLabel = new System.Windows.Forms.Label();
             this.ticker = new System.Windows.Forms.Timer(this.components);
             this.addEnemy = new System.Windows.Forms.Button();
+            this.goldLabel = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.stageLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mapLabel
@@ -76,11 +80,47 @@
             this.addEnemy.UseVisualStyleBackColor = true;
             this.addEnemy.Click += new System.EventHandler(this.addEnemy_Click);
             // 
+            // goldLabel
+            // 
+            this.goldLabel.Location = new System.Drawing.Point(355, 497);
+            this.goldLabel.Name = "goldLabel";
+            this.goldLabel.Size = new System.Drawing.Size(84, 52);
+            this.goldLabel.TabIndex = 3;
+            this.goldLabel.Text = "50";
+            // 
+            // label1
+            // 
+            this.label1.Location = new System.Drawing.Point(355, 462);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(84, 26);
+            this.label1.TabIndex = 4;
+            this.label1.Text = "Gold";
+            // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(239, 462);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(110, 26);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Next Stage";
+            // 
+            // stageLabel
+            // 
+            this.stageLabel.Location = new System.Drawing.Point(239, 497);
+            this.stageLabel.Name = "stageLabel";
+            this.stageLabel.Size = new System.Drawing.Size(110, 52);
+            this.stageLabel.TabIndex = 6;
+            this.stageLabel.Text = "50";
+            // 
             // Defense
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(451, 801);
+            this.Controls.Add(this.stageLabel);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.goldLabel);
             this.Controls.Add(this.addEnemy);
             this.Controls.Add(this.menuLabel);
             this.Controls.Add(this.mapLabel);
@@ -99,6 +139,10 @@
         private System.Windows.Forms.Label menuLabel;
         private System.Windows.Forms.Timer ticker;
         private System.Windows.Forms.Button addEnemy;
+        private System.Windows.Forms.Label goldLabel;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label stageLabel;
     }
 }
 

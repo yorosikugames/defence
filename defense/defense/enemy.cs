@@ -11,8 +11,8 @@ namespace defense
     public class Enemy
     {
         public MyPoint curPos = new MyPoint { X = 50, Y = 50 };
-        public double health = 200;
-        public double maxHealth = 200;
+        public double health = 50;
+        public double maxHealth = 50;
         public Map Map { get; private set; }
 
         private MyPoint[] PathList = null;
@@ -35,6 +35,8 @@ namespace defense
         public Enemy(Map map)
         {
             Map = map;
+
+            health = 50 * Math.Pow(1.1, map.stage);
         }
 
         public void tick()

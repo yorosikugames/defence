@@ -27,6 +27,8 @@ namespace defense
         {
             map.tick();
             mapLabel.Refresh();
+            goldLabel.Text = map.gold.ToString();
+            stageLabel.Text = map.nextStage.ToString();
         }
 
         private void mapLabel_Click(object sender, EventArgs e)
@@ -36,8 +38,10 @@ namespace defense
 
             var mousePos = new Point(mouseEventArgs.X - (mouseEventArgs.X % 10), mouseEventArgs.Y - (mouseEventArgs.Y % 10));
             var mapElem = map.getElemAt(mousePos.X, mousePos.Y);
-            if (mapElem == null)
+            if (mapElem == null && map.gold >= 5)
             {
+                map.gold -= 5;
+
                 Block block = new Block(mousePos.X, mousePos.Y, map.genBlockType());
                 map.setElem(block);
             }

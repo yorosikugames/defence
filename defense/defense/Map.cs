@@ -49,6 +49,16 @@ namespace defense
         private BlockType curBlockType = BlockType.NONE;
         private Random blockRandom = new Random(DateTime.Now.Millisecond);
 
+        private static long tickCount = 0;
+
+        public bool stageStarted = false;
+        public int remainEnemySpawnCount = 0;
+        public int nextSpawnTick = 0;
+
+        public int nextStage = 100;
+        public int gold = 100;
+        public int stage = 0;
+
         public Map()
         {
             for (int x = 0; x < 450; x++)
@@ -128,15 +138,52 @@ namespace defense
 
         public void tick()
         {
+            tickCount++;
+
+            if (remainEnemySpawnCount > 0)
+            {
+                if (nextSpawnTick == 0)
+                {
+                    registerEnemy(new Enemy(this));
+                    remainEnemySpawnCount--;
+                    nextSpawnTick = 10;
+                }
+                else
+                {
+                    nextSpawnTick--;
+                }
+            }
+
+            if (stageStarted && EnemyList.Count == 0)
+            {
+                nextStage = 300;
+                stageStarted = false;
+                stage++;
+
+                remainEnemySpawnCount = 5;
+            }
+
+            if (nextStage <= 0)
+            {
+                if (stageStarted == false)
+                {
+                    stageStarted = true;
+                }
+            }
+            else
+            {
+                nextStage--;
+            }
+
             var enemyRemovalList = new List<Enemy>();
+            var checkedBlockSet = new HashSet<Block>();
             foreach (var e in EnemyList)
             {
                 e.tick();
-
-                var checkedBlockSet = new HashSet<Block>();
-                foreach (var x in Enumerable.Range(e.curPos.X - 3, 7))
+                
+                foreach (var x in Enumerable.Range(e.curPos.X - 4, 9))
                 {
-                    foreach (var y in Enumerable.Range(e.curPos.Y - 3, 7))
+                    foreach (var y in Enumerable.Range(e.curPos.Y - 4, 9))
                     {
                         var block = getElemAt(x, y);
                         if (block == null) continue;
@@ -164,7 +211,10 @@ namespace defense
             }
 
             foreach (var e in enemyRemovalList)
+            {
                 EnemyList.Remove(e);
+                gold += 10;
+            }
 
             foreach (var b in BlockList)
             {
